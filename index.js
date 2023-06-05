@@ -45,22 +45,25 @@ document.getElementById("video-input").addEventListener("change", function (even
         videoTitleSkeleton.style.display = "block"
         videoTitle.classList.remove("loaded")
         videoTitle.removeChild(title)
+        removeBackgound()
       })
 
       getVideoColours(this)
 
-      this.addEventListener("ended", () => {
-        videoContainer.style.backgroundImage = "none"
-        videoContainer.style.boxShadow = "none"
-      })
+      this.addEventListener("ended", () => removeBackgound())
     })
   }
 })
 
+function removeBackgound() {
+  videoContainer.style.backgroundImage = "none"
+  videoContainer.style.boxShadow = "none"
+}
+
 function getVideoColours(video) {
   const canvas = document.createElement("canvas")
   const context = canvas.getContext("2d", { willReadFrequently: true })
-  const interval = 1500
+  const interval = 1300
 
   video.addEventListener("play", function () {
     setInterval(function () {
@@ -76,31 +79,34 @@ function getVideoColours(video) {
 
 function updateBackground(dominantColours) {
   if (dominantColours.length > 0) {
-    const radialGradient = `
-    radial-gradient(ellipse at ${dominantColours[0].position}, rgba(${dominantColours[0].rgb}, 0.45) 70%, rgba(${dominantColours[1].rgb}, 0.07)), 
-    radial-gradient(ellipse at ${dominantColours[2].position}, rgba(${dominantColours[2].rgb}, 0.45) 70%, rgba(${dominantColours[1].rgb}, 0.07)), 
-    radial-gradient(ellipse at ${dominantColours[1].position}, rgba(${dominantColours[1].rgb}, 0.45) 70%, rgba(${dominantColours[1].rgb}, 0.07))`
+    const gradientStops = dominantColours.map((color) => {
+      const position = color.position
+      const rgbaColor = `rgba(${color.rgb}, 0.45)`
+      return `radial-gradient(ellipse at ${position}, ${rgbaColor}, transparent)`
+    })
 
-    videoContainer.style.background = radialGradient
+    const radialGradient = gradientStops.join(", ")
 
-    const topOrBottom = (index) => (
-      dominantColours[index].position === "top" ? "-39px" : dominantColours[index].position === "bottom" ? "39px" : "0"
-    )
+    videoContainer.style.backgroundImage = radialGradient
+    const topOrBottom = (index) => (dominantColours[index].position === "top" ? "-39px" : dominantColours[index].position === "bottom" ? "39px" : "0")
 
     const boxShadow = `
-    -4px ${topOrBottom(0)} 50px 20px rgba(${dominantColours[0].rgb},0.35), 
-    -4px ${topOrBottom(2)} 50px 20px rgba(${dominantColours[2].rgb},0.35), 
-    -32px 0px 50px 20px rgba(${dominantColours[1].rgb},0.35)`
+    -4px ${topOrBottom(0)} 40px 20px rgba(${dominantColours[0].rgb},0.35),
+    -4px ${topOrBottom(1)} 40px 20px rgba(${dominantColours[1].rgb},0.35),
+    -32px 0px 30px 25px rgba(${dominantColours[2].rgb},0.35)`
 
     videoContainer.style.boxShadow = boxShadow
+  } else {
+    videoContainer.style.backgroundImage = "none"
+    videoContainer.style.boxShadow = "none"
   }
 }
 
 function getDominantColours(imageData, canvas) {
   let colourCounts = {}
   const pixels = imageData.length / 4
-  const videoWidth = canvas.width 
-  const videoHeight = canvas.height 
+  const videoWidth = canvas.width
+  const videoHeight = canvas.height
 
   for (let i = 0; i < pixels; i++) {
     const r = imageData[i * 4]
@@ -113,7 +119,7 @@ function getDominantColours(imageData, canvas) {
     } else {
       colourCounts[rgb] = {
         count: 1,
-        position: null, 
+        position: null,
       }
     }
 
