@@ -191,6 +191,8 @@
           const videoURL = URL.createObjectURL(file)
           const video = document.createElement("video")
           
+          video.autoplay = true
+          video.controls = true
           video.src = videoURL
           video.addEventListener("loadedmetadata", function () {
             
