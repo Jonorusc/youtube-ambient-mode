@@ -183,59 +183,6 @@
         </div>
       </div>
     </main>
-    <script>
-      document.getElementById("video-input").addEventListener("change", function (event) {
-        const file = event.target.files[0]
-        
-        if (file) {
-          const videoURL = URL.createObjectURL(file)
-          const video = document.createElement("video")
-
-          video.autoplay = true
-          video.controls = true
-          video.src = videoURL
-          video.addEventListener("loadedmetadata", function () {
-            
-            const videoContainer = document.querySelector(".video-container")
-            const videoTitle = document.querySelector(".video-footer .title")
-            const videoTitleSkeleton = document.querySelector(".video-footer .title .skeleton")
-            videoTitleSkeleton.style.display = "none"
-            videoTitle.classList.add('loaded')
-
-            const title = document.createElement("span")
-            title.textContent = file.name.length > 25 ? file.name.substring(0, 25) + "..." : file.name
-            videoTitle.appendChild(title)
-
-            const removeVideoBtn = document.querySelector(".video-footer .title .remove")
-            
-            const aspectRatio = this.videoWidth / this.videoHeight
-            const containerWidth = videoContainer.offsetWidth
-            const containerHeight = Math.min(555, containerWidth / aspectRatio)
-
-            videoContainer.style.height = containerHeight + "px"
-
-            const videoContainerSkeleton = videoContainer.querySelector(".skeleton")
-            videoContainerSkeleton.style.display = "none"
-
-            videoContainer.appendChild(this)
-
-            // remove video btn
-            removeVideoBtn.style.display = "block"
-
-            removeVideoBtn.addEventListener("click", () => {
-              videoContainer.removeChild(video)
-              videoContainer.style.height = "55.5rem"
-              videoContainerSkeleton.style.display = "block"
-              videoTitleSkeleton.style.display = "block"
-              removeVideoBtn.style.display = "none"
-              videoTitleSkeleton.style.display = "block"
-              videoTitle.classList.remove('loaded')
-              videoTitle.removeChild(title)
-            })
-          })
-        }
-      })
-    </script>
     <script src="./index.js"></script>
   </body>
 </html>
