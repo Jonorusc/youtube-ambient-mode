@@ -190,7 +190,7 @@
         if (file) {
           const videoURL = URL.createObjectURL(file)
           const video = document.createElement("video")
-          
+
           video.autoplay = true
           video.controls = true
           video.src = videoURL
@@ -200,6 +200,7 @@
             const videoTitle = document.querySelector(".video-footer .title")
             const videoTitleSkeleton = document.querySelector(".video-footer .title .skeleton")
             videoTitleSkeleton.style.display = "none"
+            videoTitle.classList.add('loaded')
 
             const title = document.createElement("span")
             title.textContent = file.name.length > 25 ? file.name.substring(0, 25) + "..." : file.name
@@ -228,6 +229,7 @@
               videoTitleSkeleton.style.display = "block"
               removeVideoBtn.style.display = "none"
               videoTitleSkeleton.style.display = "block"
+              videoTitle.classList.remove('loaded')
               videoTitle.removeChild(title)
             })
           })

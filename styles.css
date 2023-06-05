@@ -106,10 +106,12 @@ main .container {
 .video-footer .title {
   width: 40%;
   height: 80%;
+}
+
+.video-footer .title.loaded {
   display: flex;
   align-items: center;
   column-gap: 1rem;
-
 }
 
 .video-footer .title .remove {
