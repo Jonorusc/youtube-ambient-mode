@@ -151,7 +151,7 @@ function updateBackground(update, dominantColours = []) {
   }
 }
 
-function getDominantColours(imageData, canvas, opacity = 0.15) {
+function getDominantColours(imageData, canvas, opacity = 0.10) {
   let colourCounts = {}
   let colours = []
   const pixels = imageData.length / 4
